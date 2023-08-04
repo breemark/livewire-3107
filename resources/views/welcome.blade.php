@@ -20,6 +20,11 @@
     </head>
     <body class="antialiased">
        
+        @livewire('articles')
+        @livewire('articles.index')
+        @livewire('users-list')
+        @livewire('inline')
+        @livewire('inline-component')
         @livewireScripts
         
     </body>
