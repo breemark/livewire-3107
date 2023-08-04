@@ -1,5 +1,7 @@
 <div>
-    {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
-    Articles List
-
+    <ul>
+        @foreach ($articles as $article)
+            <li>{{ $article->title }}</li>                
+        @endforeach
+    </ul>
 </div>

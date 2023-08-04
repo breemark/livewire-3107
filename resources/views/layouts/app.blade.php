@@ -20,11 +20,10 @@
     </head>
     <body class="antialiased">
        
-        @livewire('articles')
-        @livewire('articles.index')
-        @livewire('users-list')
-        @livewire('inline')
-        @livewire('inline-component')
+
+        {{-- @livewire('articles', ['articles' => $articles]) --}} 
+
+        {{ $slot }}
         @livewireScripts
         
     </body>
