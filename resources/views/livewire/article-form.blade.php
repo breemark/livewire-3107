@@ -3,14 +3,14 @@
     <form wire:submit.prevent='save' >
         @csrf
         <label>
-            <input wire:model='title' type="text" placeholder="{{ __('Title') }}" >
-            @error('title')
+            <input wire:model='article.title' type="text" placeholder="{{ __('Title') }}" >
+            @error('article.title')
                 <div>{{ $message }}</div>
             @enderror
         </label>
         <label>
-            <textarea wire:model='content' placeholder="{{ __('Content') }}"></textarea>
-            @error('content')
+            <textarea wire:model='article.content' placeholder="{{ __('Content') }}"></textarea>
+            @error('article.content')
                 <div>{{ $message }}</div>
             @enderror
         </label>

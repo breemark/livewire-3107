@@ -10,8 +10,9 @@
 
             <li>
                 <a href="{{ route('articles.show', $article) }}"> {{ $article->title }} </a>
+                <a href="{{ route('articles.edit', $article) }}">Edit</a>
             </li>
-                            
+                                  
         @endforeach
     </ul>
 </div>
