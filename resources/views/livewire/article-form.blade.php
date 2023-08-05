@@ -4,9 +4,15 @@
         @csrf
         <label>
             <input wire:model='title' type="text" placeholder="{{ __('Title') }}" >
+            @error('title')
+                <div>{{ $message }}</div>
+            @enderror
         </label>
         <label>
             <textarea wire:model='content' placeholder="{{ __('Content') }}"></textarea>
+            @error('content')
+                <div>{{ $message }}</div>
+            @enderror
         </label>
         <input type="submit" value="{{ __('Save') }}">
     </form>
