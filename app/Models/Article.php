@@ -11,9 +11,15 @@ class Article extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'content',
     ];
 
     protected $guarded = [];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
 }

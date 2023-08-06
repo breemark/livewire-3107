@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Article;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ArticleForm extends Component
@@ -10,10 +11,19 @@ class ArticleForm extends Component
     
     public Article $article;
     
-    protected $rules = [
+    protected function rules ()
+    {
+        return [
         'article.title' => ['required', 'min:4'],
+        'article.slug' => [
+            'required',
+            Rule::unique('articles', 'slug')->ignore($this->article)
+        ],
         'article.content' => ['required'],
-    ];
+        ];
+    }
+
+
 
     public function mount(Article $article)
     {

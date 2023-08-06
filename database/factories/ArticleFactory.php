@@ -19,6 +19,7 @@ class ArticleFactory extends Factory
         return [
             //
             'title' => $this->faker->sentence,
+            'slug' => $this->faker->slug(3),
             'content' => $this->faker->paragraph,
         ];
     }

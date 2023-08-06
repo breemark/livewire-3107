@@ -9,6 +9,12 @@
             @enderror
         </label>
         <label>
+            <input wire:model="article.slug" type="text" placeholder="{{ __('URL') }}" >
+            @error('article.slug')
+                <div>{{ $message }}</div>
+            @enderror
+        </label>
+        <label>
             <textarea wire:model="article.content" placeholder="{{ __('Content') }}"></textarea>
             @error('article.content')
                 <div>{{ $message }}</div>
