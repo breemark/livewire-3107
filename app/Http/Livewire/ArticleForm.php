@@ -28,7 +28,7 @@ class ArticleForm extends Component
 
     public function save()
     {
-        $this->validate();        
+        $this->validate();
         $this->article->save();
         
         session()->flash('status', __('Article saved.'));
