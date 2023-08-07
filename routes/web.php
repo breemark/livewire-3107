@@ -19,9 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Articles::class)
     ->name('home');
 Route::get('/blog/create', ArticleForm::class)
-    ->name('articles.create');
+    ->name('articles.create')
+    ->middleware('auth');
 
 Route::get('/blog/{article}', ArticleShow::class)
     ->name('articles.show');
 Route::get('/blog/{article}/edit', ArticleForm::class)
-    ->name('articles.edit');
+    ->name('articles.edit')
+    ->middleware('auth');
+
+Route::get('login')->name('login');

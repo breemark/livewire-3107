@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Article;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -46,7 +47,8 @@ class ArticleForm extends Component
     public function save()
     {
         $this->validate();
-        $this->article->save();
+
+        Auth::user()->articles()->save($this->article);
         
         session()->flash('status', __('Article saved.'));
         $this->redirectRoute('home');

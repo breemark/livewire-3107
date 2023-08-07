@@ -3,6 +3,7 @@
 namespace Tests\Feature\Livewire;
 
 use App\Models\Article;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
@@ -16,7 +17,9 @@ class ArticleFormTest extends TestCase
 
     function test_article_form_renders()
     {
-        $this->get(route('articles.create'))
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get(route('articles.create'))
             ->assertSeeLivewire('article-form');
 
         $article = Article::factory()->create();
@@ -37,7 +40,9 @@ class ArticleFormTest extends TestCase
 
     function test_can_create_new_articles()
     {
-        Livewire::test('article-form')
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)->test('article-form')
             ->set('article.title', 'New Article')
             ->set('article.slug', 'new-article')
             ->set('article.content', 'Article Content')
@@ -49,14 +54,17 @@ class ArticleFormTest extends TestCase
         $this->assertDatabaseHas('articles', [
             'title' => 'New Article',
             'slug' => 'new-article',
-            'content' => 'Article Content'
+            'content' => 'Article Content',
+            'user_id' => $user->id
         ]);
     }
 
     function test_can_update_articles()
     {
         $article = Article::factory()->create();
-        Livewire::test('article-form', ['article' => $article])
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)->test('article-form', ['article' => $article])
             ->assertSet('article.title', $article->title)
             ->assertSet('article.slug', $article->slug)
             ->assertSet('article.content', $article->content)
@@ -100,9 +108,10 @@ class ArticleFormTest extends TestCase
 
     function test_slug_must_be_unique()
     {
+        $user = User::factory()->create();
         $article = Article::factory()->create();
 
-        Livewire::test('article-form')
+        Livewire::actingAs($user)->test('article-form')
             ->set('article.title', 'New Article')
             ->set('article.slug', $article->slug)
             ->set('article.content', 'Content')
@@ -115,8 +124,9 @@ class ArticleFormTest extends TestCase
     function test_unique_rule_should_be_ignored_when_updating_same_slug()
     {
         $article = Article::factory()->create();
+        $user = User::factory()->create();
 
-        Livewire::test('article-form', ['article' => $article])
+        Livewire::actingAs($user)->test('article-form', ['article' => $article])
             ->set('article.title', 'New Title')
             ->set('article.slug', $article->slug)
             ->set('article.content', 'Content')
@@ -188,5 +198,21 @@ class ArticleFormTest extends TestCase
             ->assertHasErrors(['article.slug' => 'alpha_dash'])
             ->assertSeeHtml(__('validation.alpha_dash', ['attribute' => 'slug']))
             ;
+    }
+
+    /**
+     * Middleware
+     */
+    function test_guests_cannot_create_nor_update_articles()
+    {
+        $this->withExceptionHandling();
+
+        $this->get(route('articles.create'))
+            ->assertRedirect('login');
+
+        $article = Article::factory()->create();
+
+        $this->get(route('articles.edit', $article))
+            ->assertRedirect('login');
     }
 }
