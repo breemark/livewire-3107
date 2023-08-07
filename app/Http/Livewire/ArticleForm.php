@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Article;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ArticleForm extends Component
@@ -17,6 +18,7 @@ class ArticleForm extends Component
         'article.title' => ['required', 'min:4'],
         'article.slug' => [
             'required',
+            'alpha_dash',
             Rule::unique('articles', 'slug')->ignore($this->article)
         ],
         'article.content' => ['required'],
@@ -34,6 +36,11 @@ class ArticleForm extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+    }
+
+    public function updatedArticleTitle($title)
+    {
+        $this->article->slug = Str::slug($title);
     }
 
     public function save()

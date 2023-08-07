@@ -90,10 +90,10 @@ class ArticleFormTest extends TestCase
     {
         Livewire::test('article-form')
             ->set('article.title', 'Article Title')
+            ->set('article.slug', null)
             ->set('article.content', 'Article Content')
             ->call('save')
             ->assertHasErrors(['article.slug' => 'required'])
-            // Check the Blade component too
             ->assertSeeHtml(__('validation.required', ['attribute' => 'slug']))
         ;
     }
@@ -169,5 +169,24 @@ class ArticleFormTest extends TestCase
             ->set('article.content', 'New Article')
             ->assertHasNoErrors('article.title')
         ;
+    }
+
+    function test_slug_is_generated_automatically()
+    {
+        Livewire::test('article-form')
+            ->set('article.title', 'New Title')
+            ->assertSet('article.slug', 'new-title');
+    }
+
+    function test_slug_must_only_contain_letters_numbers_dashes_and_underscores()
+    {
+        Livewire::test('article-form')
+            ->set('article.title', 'Title')
+            ->set('article.slug', 'title$*%')
+            ->set('article.content', 'Content')
+            ->call('save')
+            ->assertHasErrors(['article.slug' => 'alpha_dash'])
+            ->assertSeeHtml(__('validation.alpha_dash', ['attribute' => 'slug']))
+            ;
     }
 }
