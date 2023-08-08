@@ -25,13 +25,10 @@
                         <x-input-error class="mt-2" for="article.slug" />
                     </div>
 
-                    <div class="col-span-6">
-                        <label>
-                            <textarea wire:model="article.content" placeholder="{{ __('Content') }}"></textarea>
-                            @error('article.content')
-                                <div>{{ $message }}</div>
-                            @enderror
-                        </label>
+                    <div class="col-span-6 sm:col-span-4">
+                        <x-label for="content" :value="__('Content')"/>
+                        <x-html-editor wire:model="article.content" id="content" class="mt-1 block w-full" ></x-html-editor>
+                        <x-input-error for="article.content" class="mt-2"/>
                     </div>
                     <x-slot name="actions">
                         <x-button>
