@@ -7,15 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ArticleForm extends Component
 {
-    
+    use WithFileUploads;    
+
     public Article $article;
+
+    public $image;
     
     protected function rules ()
     {
         return [
+        'image' => ['image', 'max:2048'],
         'article.title' => ['required', 'min:4'],
         'article.slug' => [
             'required',
@@ -25,7 +30,6 @@ class ArticleForm extends Component
         'article.content' => ['required'],
         ];
     }
-
 
 
     public function mount(Article $article)
@@ -47,6 +51,8 @@ class ArticleForm extends Component
     public function save()
     {
         $this->validate();
+
+        $this->article->image = $this->image->store('/', 'public');
 
         Auth::user()->articles()->save($this->article);
         

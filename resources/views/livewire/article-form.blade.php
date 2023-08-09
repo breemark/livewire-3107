@@ -15,6 +15,11 @@
                 </x-slot>
                 <x-slot name="form">
                     <div class="col-span-6 sm:col-span-4">
+                        <x-label for="image" :value="__('Image')"/>
+                        <x-input id="image" class="mt-1 block w-full" wire:model="image" type="file"/>
+                        <x-input-error class="mt-2" for="image" />
+                    </div>
+                    <div class="col-span-6 sm:col-span-4">
                         <x-label for="title" :value="__('Title')"/>
                         <x-input id="title" class="mt-1 block w-full" wire:model="article.title" type="text"/>
                         <x-input-error class="mt-2" for="article.title" />
