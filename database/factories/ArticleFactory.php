@@ -20,6 +20,7 @@ class ArticleFactory extends Factory
         return [
             //
             'title' => $this->faker->sentence,
+            'image' => $this->faker->imageUrl,
             'slug' => $this->faker->slug(3),
             'content' => $this->faker->paragraph,
             'user_id' => User::factory()

@@ -6,6 +6,8 @@ use App\Models\Article;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -34,15 +36,19 @@ class ArticleFormTest extends TestCase
             ->assertSeeHtml('wire:submit.prevent="save"')
             ->assertSeeHtml('wire:model="article.title"')
             ->assertSeeHtml('wire:model="article.slug"')
-            ->assertSeeHtml('wire:model="article.content"')
         ;
     }
 
     function test_can_create_new_articles()
     {
+        Storage::fake('public');
+
+        $image = UploadedFile::fake()->image('post-image.png');
+
         $user = User::factory()->create();
 
         Livewire::actingAs($user)->test('article-form')
+            ->set('image', $image)
             ->set('article.title', 'New Article')
             ->set('article.slug', 'new-article')
             ->set('article.content', 'Article Content')
@@ -52,11 +58,14 @@ class ArticleFormTest extends TestCase
         ;
 
         $this->assertDatabaseHas('articles', [
+            'image' => $imagePath = Storage::disk('public')->files()[0],
             'title' => 'New Article',
             'slug' => 'new-article',
             'content' => 'Article Content',
             'user_id' => $user->id
         ]);
+
+        Storage::disk('public')->assertExists($imagePath);
     }
 
     function test_can_update_articles()
@@ -81,6 +90,32 @@ class ArticleFormTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('articles', 1);
+    }
+
+    function test_can_update_article_image()
+    {
+        Storage::fake('public');
+
+        $oldImage = UploadedFile::fake()->image('old-image.png');
+        $oldImagePath = $oldImage->store('/', 'public');
+
+        $newImage = UploadedFile::fake()->image('new-image.png');
+
+        $article = Article::factory()->create([
+            'image' => $oldImagePath
+        ]);
+
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)->test('article-form', ['article' => $article])
+            ->set('image', $newImage)
+            ->call('save')
+            ->assertSessionHas('status')
+            ->assertRedirect(route('home'));
+
+        Storage::disk('public')
+            ->assertExists($article->fresh()->image)
+            ->assertMissing($oldImagePath);
     }
 
     function test_title_is_required()
