@@ -21,7 +21,10 @@ class ArticleForm extends Component
     protected function rules ()
     {
         return [
-        'image' => [],
+        'image' => [
+            Rule::requiredIf(! $this->article->image),
+            Rule::when($this->image, ['image', 'max:2048']),
+        ],
         'article.title' => ['required', 'min:4'],
         'article.slug' => [
             'required',
@@ -53,7 +56,6 @@ class ArticleForm extends Component
     {
         $this->validate();
 
-        //$this->article->image = $this->image->store('/', 'public');
         if($this->image) {
             $this->article->image = $this->uploadImage();
         }
