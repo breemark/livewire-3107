@@ -15,9 +15,7 @@
                 </x-slot>
                 <x-slot name="form">
                     <div class="col-span-6 sm:col-span-4">
-
                         <x-image-input wire:model="image" :image="$image" :existing="$article->image" />
-
                         <x-input-error class="mt-2" for="image" />
                     </div>
                     <div class="col-span-6 sm:col-span-4">
