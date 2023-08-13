@@ -4,6 +4,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Models\Article;
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -47,11 +48,14 @@ class ArticleFormTest extends TestCase
 
         $user = User::factory()->create();
 
+        $category = Category::factory()->create();
+
         Livewire::actingAs($user)->test('article-form')
             ->set('image', $image)
             ->set('article.title', 'New Article')
             ->set('article.slug', 'new-article')
             ->set('article.content', 'Article Content')
+            ->set('article.category_id', $category->id)
             ->call('save')
             ->assertSessionHas('status')
             ->assertRedirect(route('home'))
@@ -62,6 +66,7 @@ class ArticleFormTest extends TestCase
             'title' => 'New Article',
             'slug' => 'new-article',
             'content' => 'Article Content',
+            'category_id' => $category->id,
             'user_id' => $user->id
         ]);
 

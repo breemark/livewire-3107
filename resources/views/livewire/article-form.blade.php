@@ -28,7 +28,16 @@
                         <x-input id="slug" class="mt-1 block w-full" wire:model="article.slug" type="text"/>
                         <x-input-error class="mt-2" for="article.slug" />
                     </div>
-
+                    <div class="col-span-6 sm:col-span-4">
+                        <x-label for="category_id" :value="__('Category')"/>
+                        <x-select 
+                            id="category_id" 
+                            class="mt-1 block w-full" 
+                            wire:model="article.category_id" 
+                            :options="$categories"
+                            :placeholder="__('Select Category')" />
+                        <x-input-error class="mt-2" for="article.category_id" />
+                    </div>
                     <div class="col-span-6 sm:col-span-4">
                         <x-label for="content" :value="__('Content')"/>
                         <x-html-editor wire:model="article.content" id="content" class="mt-1 block w-full" ></x-html-editor>
