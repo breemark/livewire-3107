@@ -22,18 +22,21 @@ class ArticleForm extends Component
     protected function rules ()
     {
         return [
-        'image' => [
-            Rule::requiredIf(! $this->article->image),
-            Rule::when($this->image, ['image', 'max:2048']),
-        ],
-        'article.title' => ['required', 'min:4'],
-        'article.slug' => [
-            'required',
-            'alpha_dash',
-            Rule::unique('articles', 'slug')->ignore($this->article)
-        ],
-        'article.content' => ['required'],
-        'article.category_id' => [],
+            'image' => [
+                Rule::requiredIf(! $this->article->image),
+                Rule::when($this->image, ['image', 'max:2048']),
+            ],
+            'article.title' => ['required', 'min:4'],
+            'article.slug' => [
+                'required',
+                'alpha_dash',
+                Rule::unique('articles', 'slug')->ignore($this->article)
+            ],
+            'article.content' => ['required'],
+            'article.category_id' => [
+                'required', 
+                Rule::exists('categories', 'id')
+            ],
         ];
     }
 

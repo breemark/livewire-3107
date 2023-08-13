@@ -277,6 +277,30 @@ class ArticleFormTest extends TestCase
             ;
     }
 
+    function test_category_is_required()
+    {
+        Livewire::test('article-form')
+            ->set('article.title', 'New Article')
+            ->set('article.slug', 'new-article')
+            ->set('article.content', 'Article content')
+            ->set('article.category_id', null)
+            ->call('save')
+            ->assertHasErrors(['article.category_id' => 'required'])
+            ->assertSeeHtml(__('validation.required', ['attribute' => 'category id']));
+    }
+
+    function test_category_must_exist_in_database()
+    {
+        Livewire::test('article-form')
+            ->set('article.title', 'New Article')
+            ->set('article.slug', 'new-article')
+            ->set('article.content', 'Article content')
+            ->set('article.category_id', 1)
+            ->call('save')
+            ->assertHasErrors(['article.category_id' => 'exists'])
+            ->assertSeeHtml(__('validation.exists', ['attribute' => 'category id']));
+    }
+
     /**
      * Middleware
      */
