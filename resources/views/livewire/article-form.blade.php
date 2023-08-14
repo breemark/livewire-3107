@@ -30,13 +30,24 @@
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <x-label for="category_id" :value="__('Category')"/>
-                        <x-select 
-                            id="category_id" 
-                            class="mt-1 block w-full" 
-                            wire:model="article.category_id" 
-                            :options="$categories"
-                            :placeholder="__('Select Category')" />
-                        <x-input-error class="mt-2" for="article.category_id" />
+                        <div class="flex space-x-2 mt-1">
+                            <x-select 
+                                id="category_id" 
+                                class="block w-full" 
+                                wire:model="article.category_id" 
+                                :options="$categories"
+                                :placeholder="__('Select Category')" />
+                                <x-secondary-button
+                                    wire:click="$set('showCategoryModal', true)" 
+                                    class="!p-2.5">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                                        </path>
+                                    </svg>
+                                </x-secondary-button>
+                            <x-input-error class="mt-2" for="article.category_id" />
+                        </div>
+
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <x-label for="content" :value="__('Content')"/>
@@ -52,4 +63,14 @@
             </x-form-section>
         </div>
     </div>
+    <x-dialog-modal wire:model="showCategoryModal">
+		<x-slot name="title">Modal Title</x-slot>
+		<x-slot name="content">Category Form</x-slot>
+
+		<x-slot name="footer">
+			<x-secondary-button wire:click="$set('showCategoryModal', false)">
+                Cancel
+            </x-secondary-button>
+		</x-slot>
+	</x-dialog-modal>
 </div>

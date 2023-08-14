@@ -18,6 +18,8 @@ class ArticleForm extends Component
     public Article $article;
 
     public $image;
+
+    public $showCategoryModal = false;
     
     protected function rules ()
     {
