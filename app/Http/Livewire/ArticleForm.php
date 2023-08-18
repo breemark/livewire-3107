@@ -22,6 +22,8 @@ class ArticleForm extends Component
     public $newCategory;
 
     public $showCategoryModal = false;
+
+    public $showDeleteModal = false;
     
     protected function rules ()
     {
@@ -74,7 +76,7 @@ class ArticleForm extends Component
     {
         $this->validateOnly('newCategory.name');
         $this->validateOnly('newCategory.slug');
-        
+
         $this->newCategory->save();
         $this->article->category_id = $this->newCategory->id;
         $this->closeCategoryForm();
@@ -123,5 +125,12 @@ class ArticleForm extends Component
         return view('livewire.article-form', [
             'categories' => Category::pluck('name', 'id')
         ]);
+    }
+
+    public function delete()
+    {
+        $this->article->delete();
+
+        $this->redirect('/');
     }
 }
