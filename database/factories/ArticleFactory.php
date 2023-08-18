@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Category;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +25,7 @@ class ArticleFactory extends Factory
             'image' => $this->faker->imageUrl,
             'slug' => $this->faker->slug(3),
             'content' => $this->faker->paragraph,
+            'category_id' => Category::factory(),
             'user_id' => User::factory()
         ];
     }
