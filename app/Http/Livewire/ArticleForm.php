@@ -108,7 +108,7 @@ class ArticleForm extends Component
         Auth::user()->articles()->save($this->article);
         
         session()->flash('status', __('Article saved.'));
-        $this->redirectRoute('home');
+        $this->redirectRoute('articles.index');
     }
 
     protected function uploadImage()
@@ -135,7 +135,7 @@ class ArticleForm extends Component
 
         session()->flash('status', __('Article deleted.'));
 
-        $this->redirect(route('home'));
+        $this->redirect(route('articles.index'));
 
     }
 }
