@@ -23,12 +23,14 @@ class ArticleFormTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)->get(route('articles.create'))
-            ->assertSeeLivewire('article-form');
+            ->assertSeeLivewire('article-form')
+            ->assertDontSeeText(__('Delete'));
 
         $article = Article::factory()->create();
 
-        $this->get(route('articles.edit', $article))
-            ->assertSeeLivewire('article-form');
+        $this->actingAs($user)->get(route('articles.edit', $article))
+            ->assertSeeLivewire('article-form')
+            ->assertSeeText(__('Delete'));
     }
 
     function test_blade_template_is_wired()
@@ -362,6 +364,30 @@ class ArticleFormTest extends TestCase
             ->call('saveNewCategory')
             ->assertHasErrors(['newCategory.slug' => 'unique'])
             ->assertSeeHtml(__('validation.unique', ['attribute' => 'slug']));
+    }
+
+    function test_can_delete_articles()
+    {
+        Storage::fake();
+
+        $imagePath = UploadedFile::fake()
+            ->image('image.png')
+            ->store('/', 'public');
+
+        $article = Article::factory()->create([
+            'image' => $imagePath
+        ]);
+
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)->test('article-form', ['article' => $article])
+            ->call('delete')
+            ->assertSessionHas('status')
+            ->assertRedirect(route('home'));
+
+        Storage::disk('public')->assertMissing($imagePath);
+
+        $this->assertDatabaseCount('articles', 0);
     }
 
     /**
